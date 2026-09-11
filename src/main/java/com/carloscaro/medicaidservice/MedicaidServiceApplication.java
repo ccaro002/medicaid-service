@@ -10,4 +10,12 @@ public class MedicaidServiceApplication {
         SpringApplication.run(MedicaidServiceApplication.class, args);
     }
 
+//    @Bean
+//    CommandLineRunner demo(DrugService service) {
+//        return args -> {
+//            Drug sample = service.find("D9").orElseThrow();
+//            System.out.println("found: " + sample.getId() + " " + sample.getName());
+//             service.create("D10", null);
+//        };
+//    }
 }
