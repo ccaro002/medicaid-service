@@ -49,4 +49,13 @@ class DrugControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail").value("Drug not found"));
     }
+
+    @Test
+    void unexpectedErrorReturns500() throws Exception {
+        when(drugService.find(DRUG_ID)).thenThrow(new IllegalArgumentException());
+        mockMvc.perform(get(URI, DRUG_ID)
+                    .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.detail").value("Unexpected error"));
+    }
 }

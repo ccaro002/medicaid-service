@@ -1,25 +1,21 @@
 package com.carloscaro.medicaidservice.drug;
 
-import org.springframework.http.HttpStatus;
+import com.carloscaro.medicaidservice.common.NotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequiredArgsConstructor
 public class DrugController {
     private final DrugService drugService;
 
-    public DrugController(DrugService drugService) {
-        this.drugService = drugService;
-    }
-
     @GetMapping("/drugs/{id}")
-    public DrugResponse getDrug(@PathVariable String id) {
-        Drug drug = drugService.find(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Drug not found"));
-        return new DrugResponse(drug.getId(), drug.getName());
+    public ResponseEntity<DrugResponse> getDrug(@PathVariable String id) {
+        Drug drug = drugService.find(id).orElseThrow(() -> new NotFoundException("Drug not found"));
+        DrugResponse response = new DrugResponse(drug.getId(), drug.getName());
+        return ResponseEntity.ok(response);
     }
 }
