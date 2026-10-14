@@ -3,14 +3,13 @@ package com.carloscaro.medicaidservice.drug;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -31,9 +30,9 @@ public class DrugServiceIntegrationTest {
         em.flush();
         em.clear();
         Drug actualDrug = service.find(DRUG_ID).orElseThrow();
-        assertTrue(emptyDrug.isEmpty());
-        assertEquals(DRUG_ID, actualDrug.getId());
-        assertEquals(DRUG_NAME, actualDrug.getName());
+        Assertions.assertTrue(emptyDrug.isEmpty());
+        Assertions.assertEquals(DRUG_ID, actualDrug.getId());
+        Assertions.assertEquals(DRUG_NAME, actualDrug.getName());
     }
 
     @Test
@@ -41,10 +40,10 @@ public class DrugServiceIntegrationTest {
         service.create(DRUG_ID, DRUG_NAME);
         em.flush();
         em.clear();
-        ConstraintViolationException exception = assertThrows(ConstraintViolationException.class, () -> {
+        ConstraintViolationException exception = Assertions.assertThrows(ConstraintViolationException.class, () -> {
             service.create(DRUG_ID, OTHER_DRUG_NAME);
             em.flush();
         });
-        assertEquals("23505", exception.getSQLState());
+        Assertions.assertEquals("23505", exception.getSQLState());
     }
 }
